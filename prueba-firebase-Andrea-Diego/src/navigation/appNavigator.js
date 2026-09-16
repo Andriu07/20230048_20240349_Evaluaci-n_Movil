@@ -16,7 +16,7 @@ export default function AppNavigator() {
   const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
  
-  // Control de sesión: escucha si hay usuario autenticado.
+  // Control de sesion: escucha si hay usuario autenticado.
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
@@ -40,7 +40,7 @@ export default function AppNavigator() {
           // Sesión activa -> Dashboard
           <Stack.Screen name="Dashboard" component={DashboardScreen} />
         ) : (
-          // Sin sesión -> Login / Registro
+          // Sin sesion -> Login / Registro
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />

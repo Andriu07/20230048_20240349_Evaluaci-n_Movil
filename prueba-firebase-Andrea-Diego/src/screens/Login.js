@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
-  // Valores por defecto para desarrollo rápido
+  // Valores por defecto para desarrollo rapido
   const [email, setEmail] = useState('test@gmail.com');
   const [password, setPassword] = useState('123456');
   const [isRegistering, setIsRegistering] = useState(false);

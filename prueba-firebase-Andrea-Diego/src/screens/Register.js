@@ -6,7 +6,6 @@ import {
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
-import { colors } from '../theme/colors';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
  
@@ -20,7 +19,7 @@ export default function RegisterScreen({ navigation }) {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
  
-  // Validación de todos los campos obligatorios.
+  // Validación de todos los campos obligatorios
   const validar = () => {
     const e = {};
     if (!nombre.trim()) e.nombre = 'El nombre es obligatorio';
@@ -44,7 +43,7 @@ export default function RegisterScreen({ navigation }) {
     if (!validar()) return;
     setLoading(true);
     try {
-      // 1. Crear usuario en Firebase Auth
+      // 1. Crear usuario en Firebase Authhj
       const cred = await createUserWithEmailAndPassword(auth, correo.trim(), password);
  
       // 2. Guardar los datos en Firestore (colección "usuarios")
@@ -56,8 +55,8 @@ export default function RegisterScreen({ navigation }) {
         correo: correo.trim(),
         creadoEn: new Date().toISOString(),
       });
-      // La navegación al Dashboard ocurre automáticamente
-      // por el listener de sesión (onAuthStateChanged).
+      // La navegación al Dashboard ocurre automaticamente
+      // por el listener de sesiopn (onAuthStateChanged).
     } catch (error) {
       let msg = 'Ocurrió un error al registrar.';
       if (error.code === 'auth/email-already-in-use') msg = 'El correo ya está registrado.';

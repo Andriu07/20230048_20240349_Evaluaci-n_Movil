@@ -1,17 +1,34 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+import { initializeApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+ 
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+} from '@env';
+ 
 const firebaseConfig = {
-  apiKey: "AIzaSyDEQVenHnZixlh_HSYcVz2yPcf25QZHr8w",
-  authDomain: "fir-evaluacion-1d973.firebaseapp.com",
-  projectId: "fir-evaluacion-1d973",
-  storageBucket: "fir-evaluacion-1d973.firebasestorage.app",
-  messagingSenderId: "737849930714",
-  appId: "1:737849930714:web:ef6459cd2ff4f20732c6e3"
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
 };
-
-// Initialize Firebase
+ 
 const app = initializeApp(firebaseConfig);
+ 
+// Persistencia con AsyncStorage: mantiene la sesión iniciada
+// aunque se cierre la app (control de sesión).
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+ 
+export const db = getFirestore(app);
+export default app;
+ 
