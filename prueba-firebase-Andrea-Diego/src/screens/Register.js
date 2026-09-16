@@ -6,7 +6,7 @@ import {
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
-import CustomInput from '../components/CustomInput';
+import CustomInput from '../components/customInput';
 import CustomButton from '../components/CustomButton';
  
 export default function RegisterScreen({ navigation }) {

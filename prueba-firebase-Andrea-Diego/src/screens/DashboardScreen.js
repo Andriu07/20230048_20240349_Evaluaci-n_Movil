@@ -5,9 +5,8 @@ import {
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
-import { colors } from '../theme/colors';
-import UserCard from '../components/UserCard';
-import CustomInput from '../components/CustomInput';
+import UserCard from '../components/CardUsers';
+import CustomInput from '../components/customInput';
 import CustomButton from '../components/CustomButton';
  
 export default function DashboardScreen() {

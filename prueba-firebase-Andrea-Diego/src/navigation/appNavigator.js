@@ -4,10 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import { colors } from '../theme/colors';
  
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import LoginScreen from '../screens/Login';
+import RegisterScreen from '../screens/Register';
 import DashboardScreen from '../screens/DashboardScreen';
  
 const Stack = createNativeStackNavigator();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { colors } from '../theme/colors';
+
  
 // Componente reutilizable de botón. Admite variantes y estado de carga.
 export default function CustomButton({
@@ -9,12 +9,8 @@ export default function CustomButton({
   loading = false,
   variant = 'primary', // 'primary' | 'secondary' | 'danger'
   disabled = false,
-}) {
-  const variantStyle = {
-    primary: { backgroundColor: colors.primary },
-    secondary: { backgroundColor: colors.secondary },
-    danger: { backgroundColor: colors.danger },
-  }[variant];
+}) 
+{
  
   return (
     <TouchableOpacity

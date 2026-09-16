@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { colors } from '../theme/colors';
  
 // Componente reutilizable de entrada de texto con etiqueta y error.
 export default function CustomInput({
