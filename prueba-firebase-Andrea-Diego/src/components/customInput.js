@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
- 
-// Componente reutilizable de entrada de texto con etiqueta y error.
+import { colors } from '../theme/colors';
+
 export default function CustomInput({
   label,
   value,
@@ -29,15 +29,10 @@ export default function CustomInput({
     </View>
   );
 }
- 
+
 const styles = StyleSheet.create({
   container: { marginBottom: 14 },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    marginBottom: 6,
-  },
+  label: { fontSize: 14, fontWeight: '600', color: colors.textPrimary, marginBottom: 6 },
   input: {
     backgroundColor: colors.surface,
     borderWidth: 1,
@@ -49,10 +44,5 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   inputError: { borderColor: colors.danger },
-  errorText: {
-    color: colors.danger,
-    fontSize: 12,
-    marginTop: 4,
-  },
+  errorText: { color: colors.danger, fontSize: 12, marginTop: 4 },
 });
- 

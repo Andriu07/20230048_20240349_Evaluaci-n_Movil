@@ -8,7 +8,8 @@ import { auth, db } from '../config/firebase';
 import UserCard from '../components/CardUsers';
 import CustomInput from '../components/customInput';
 import CustomButton from '../components/CustomButton';
- 
+import { colors } from '../theme/colors';
+
 export default function DashboardScreen() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);

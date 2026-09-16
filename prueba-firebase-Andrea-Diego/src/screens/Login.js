@@ -1,115 +1,75 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import {
+  View, Text, StyleSheet, KeyboardAvoidingView, Platform,
+  TouchableOpacity, Alert,
+} from 'react-native';
 import { useAuth } from '../hooks/useAuth';
+import { colors } from '../theme/colors';
+import CustomInput from '../components/customInput';
+import CustomButton from '../components/CustomButton';
 
-export default function Login() {
-  // Valores por defecto para desarrollo rapido
-  const [email, setEmail] = useState('test@gmail.com');
-  const [password, setPassword] = useState('123456');
-  const [isRegistering, setIsRegistering] = useState(false);
+export default function Login({ navigation }) {
+  const [correo, setCorreo] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const { login, register } = useAuth();
+  const { iniciarSesion } = useAuth();
 
-  const handleAuth = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Por favor ingresa correo y contraseña.');
-      return;
-    }
+  const validar = () => {
+    const e = {};
+    if (!correo.trim()) e.correo = 'El correo es obligatorio';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) e.correo = 'Correo no valido';
+    if (!password) e.password = 'La contrasena es obligatoria';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
 
+  const handleLogin = async () => {
+    if (!validar()) return;
+    setLoading(true);
     try {
-      if (isRegistering) {
-        await register(email, password);
-        Alert.alert('¡Éxito!', 'Cuenta creada correctamente');
-      } else {
-        await login(email, password);
-      }
+      await iniciarSesion(correo.trim(), password);
     } catch (error) {
-      Alert.alert('Error de Autenticación', error.message);
+      let msg = 'No se pudo iniciar sesion.';
+      if (['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found']
+        .includes(error.code)) msg = 'Correo o contrasena incorrectos.';
+      Alert.alert('Error', msg);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        {isRegistering ? 'Crear Cuenta' : 'Iniciar Sesión'}
-      </Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <View style={styles.inner}>
+        <Text style={styles.title}>Bienvenido</Text>
+        <Text style={styles.subtitle}>Inicia sesion para continuar</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Correo electrónico"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+        <CustomInput label="Correo" value={correo} onChangeText={setCorreo}
+          placeholder="correo@ejemplo.com" keyboardType="email-address"
+          autoCapitalize="none" error={errors.correo} />
+        <CustomInput label="Contrasena" value={password} onChangeText={setPassword}
+          placeholder="Tu contrasena" secureTextEntry error={errors.password} />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+        <CustomButton title="Iniciar sesion" onPress={handleLogin} loading={loading} />
 
-      <TouchableOpacity style={styles.button} onPress={handleAuth}>
-        <Text style={styles.buttonText}>
-          {isRegistering ? 'Registrarse' : 'Ingresar'}
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={styles.switchButton} 
-        onPress={() => setIsRegistering(!isRegistering)}
-      >
-        <Text style={styles.switchText}>
-          {isRegistering 
-            ? '¿Ya tienes cuenta? Inicia sesión aquí' 
-            : '¿No tienes cuenta? Regístrate aquí'}
-        </Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.linkWrapper} onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.link}>No tienes cuenta? Registrate</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  input: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    marginBottom: 15,
-  },
-  button: {
-    backgroundColor: '#0284c7',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  switchButton: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  switchText: {
-    color: '#0284c7',
-    fontSize: 14,
-  },
+  container: { flex: 1, backgroundColor: colors.background },
+  inner: { flex: 1, justifyContent: 'center', padding: 24 },
+  title: { fontSize: 30, fontWeight: '800', color: colors.secondary },
+  subtitle: { fontSize: 15, color: colors.textSecondary, marginBottom: 28, marginTop: 4 },
+  linkWrapper: { marginTop: 18, alignItems: 'center' },
+  link: { color: colors.primary, fontWeight: '600' },
 });

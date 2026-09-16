@@ -4,18 +4,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebase';
- 
+import { colors } from '../theme/colors';
+
 import LoginScreen from '../screens/Login';
 import RegisterScreen from '../screens/Register';
 import DashboardScreen from '../screens/DashboardScreen';
- 
+
 const Stack = createNativeStackNavigator();
- 
+
 export default function AppNavigator() {
   const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
- 
-  // Control de sesion: escucha si hay usuario autenticado.
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
@@ -23,7 +23,7 @@ export default function AppNavigator() {
     });
     return unsub;
   }, []);
- 
+
   if (checking) {
     return (
       <View style={styles.center}>
@@ -31,15 +31,13 @@ export default function AppNavigator() {
       </View>
     );
   }
- 
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          // Sesión activa -> Dashboard
           <Stack.Screen name="Dashboard" component={DashboardScreen} />
         ) : (
-          // Sin sesion -> Login / Registro
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
@@ -49,11 +47,12 @@ export default function AppNavigator() {
     </NavigationContainer>
   );
 }
- 
+
 const styles = StyleSheet.create({
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.background,
   },
 });

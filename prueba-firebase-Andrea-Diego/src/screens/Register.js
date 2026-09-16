@@ -8,6 +8,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 import CustomInput from '../components/customInput';
 import CustomButton from '../components/CustomButton';
+import { colors } from '../theme/colors';
  
 export default function RegisterScreen({ navigation }) {
   const [nombre, setNombre] = useState('');
