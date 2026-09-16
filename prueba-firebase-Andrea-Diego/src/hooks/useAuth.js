@@ -1,46 +1,42 @@
 import { useState, useEffect } from 'react';
-import { auth } from '../config/firebase';
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
 } from 'firebase/auth';
-
-export const useAuth = () => {
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
+ 
+export function useAuth() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Escucha el estado del usuario en tiempo real
+  const [checking, setChecking] = useState(true);
+ 
+  // Control de sesión
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setChecking(false);
     });
-
-    return () => unsubscribe();
+    return unsub;
   }, []);
-
-  // Función para iniciar sesión
-  const login = async (email, password) => {
-    return await signInWithEmailAndPassword(auth, email, password);
+ 
+  // Registro: crea el usuario y guarda sus datos en Firestore
+  const registrar = async (correo, password, datos) => {
+    const cred = await createUserWithEmailAndPassword(auth, correo, password);
+    await setDoc(doc(db, 'usuarios', cred.user.uid), {
+      ...datos,
+      correo,
+      creadoEn: new Date().toISOString(),
+    });
+    return cred.user;
   };
-
-  // Función para registrar un nuevo usuario
-  const register = async (email, password) => {
-    return await createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  // Función para cerrar sesión
-  const logout = async () => {
-    return await signOut(auth);
-  };
-
-  return {
-    user,
-    loading,
-    login,
-    register,
-    logout,
-  };
-};
+ 
+  const iniciarSesion = (correo, password) =>
+    signInWithEmailAndPassword(auth, correo, password);
+ 
+  const cerrarSesion = () => signOut(auth);
+ 
+  return { user, checking, registrar, iniciarSesion, cerrarSesion };
+}
+ 
